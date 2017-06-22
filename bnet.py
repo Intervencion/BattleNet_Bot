@@ -162,9 +162,15 @@ def command_id(m):
 			print("5")
 		f = str(arrayl).replace(" '","").replace("'","")
 		f = f.replace(",", "\n").replace("[","").replace("]","")
-		print(arrayl)
-		bot.send_message(cid, f'*{f}*', parse_mode = "Markdown")
-		con.commit()
+		if not f:
+			f = "The DB is empty. Please add yourself with `/add Battletag` where `Battletag` is your Battletag or Blizzard ID."
+			print(str(f))
+			bot.send_message(cid, f'{f}', parse_mode = "Markdown")
+			con.commit()
+		else:
+			print(str(f))
+			bot.send_message(cid, f'*{f}*', parse_mode = "Markdown")
+			con.commit()
 	
 	except:
 		bot.send_message(cid, "An error ocurred. Report to @Intervencion.")
