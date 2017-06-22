@@ -184,7 +184,10 @@ def command_addbtag(m):
 	ufm = m.from_user.first_name
 	ulm = m.from_user.last_name
 	if (m.from_user.username is None):
-		uname = f'{ufm} {ulm}'
+		if (ulm == None):
+			uname = ufm
+		else:
+			uname = f'{ufm} {ulm}'
 	else:
 		uname = m.from_user.username
 	if(cid>0):
@@ -249,7 +252,7 @@ def command_editbtag(m):
 	cid = m.chat.id
 	uid = m.from_user.id
 	ufm = m.from_user.first_name
-	ulm = m.from_user.first_name
+	ulm = m.from_user.last_name
 	if (m.from_user.username is None):
 		uname = f"{ufm} {ulm}"
 	else:
@@ -277,7 +280,7 @@ def command_mibtag(m):
 	cid = m.chat.id
 	uid = m.from_user.id
 	ufm = m.from_user.first_name
-	ulm = m.from_user.first_name
+	ulm = m.from_user.last_name
 	if (m.from_user.username is None):
 		uname = f"{ufm} {ulm}"
 	else:
@@ -288,9 +291,13 @@ def command_mibtag(m):
 		for i in c:
 			Alias_resultado = f"{i[0]} "
 			btag_resultado = i[1]
-			
-		bot.send_message(cid, f'*{Alias_resultado}*: `{btag_resultado}`', parse_mode = "Markdown")
-		con.commit()
+				
+		if (btag_resultado == None):
+			bot.send_message(cid, f'Your Battletag is not in the DB.', parse_mode = "Markdown")
+			con.commit()
+		else:
+			bot.send_message(cid, f'*{Alias_resultado}*: `{btag_resultado}`', parse_mode = "Markdown")
+			con.commit()
 	except:
 		bot.send_message(cid, "Your Battletag is not in the DB.", parse_mode = "Markdown")
 
