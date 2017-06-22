@@ -156,7 +156,7 @@ def command_id(m):
 			print("2)" + str(Alias_resultado))
 			btag_resultado = i[2]
 			print("3)" + str(btag_resultado))
-			p = str(Alias_resultado) + str(btag_resultado)
+			p = f'*{Alias_resultado}* `{btag_resultado}`'
 			print("4" + str(p))
 			arrayl.append(p)
 			print("5")
@@ -169,7 +169,7 @@ def command_id(m):
 			con.commit()
 		else:
 			print(str(f))
-			bot.send_message(cid, f'*{f}*', parse_mode = "Markdown")
+			bot.send_message(cid, f'{f}', parse_mode = "Markdown")
 			con.commit()
 	
 	except:
@@ -193,7 +193,7 @@ def command_addbtag(m):
 		print(str(cid))
 		print("VAMOS A LEERLO SIN TRY")
 		try:
-			btag = m.text.split(' ', 1)[1].replace(" ", "").capitalize()
+			btag = m.text.split(' ', 1)[1].capitalize()
 			print(str(btag))
 			if re.match("^(\w+)#(\d{4,5})$", btag):
 				print("He entrado comprovando que el patrón es bueno")
@@ -230,7 +230,7 @@ def command_addbtag(m):
 						print("Sabemos que EUG vale " + str(EUG))
 						if(EUG == 0):
 							print("Entro cuando no existe la combinación usuario - grupo")
-							c.execute(f"INSERT INTO UsuGrupo(idUsuarioFK,idGrupoFK) VALUES ('{uid}','{cid}'")
+							c.execute(f"INSERT INTO UsuGrupo(idUsuarioFK,idGrupoFK) VALUES ('{uid}','{cid}')")
 							bot.send_message(cid, f"*{uname}* has been added to the DB with Battletag *{btag}*.", parse_mode="Markdown")
 						if(EUG == 1):
 							bot.send_message(cid, "You have already introduced your Battletag in this group, if you want to edit it use `/edit`", parse_mode="Markdown")
@@ -255,7 +255,7 @@ def command_editbtag(m):
 	else:
 		uname = m.from_user.username
 	try:
-		btag = m.text.split(' ', 1)[1].replace(" ", "").capitalize()
+		btag = m.text.split(' ', 1)[1].capitalize()
 		print(str(btag))
 		if re.match("^(\w+)#(\d{4,5})$", btag):
 			try:
@@ -283,13 +283,13 @@ def command_mibtag(m):
 	else:
 		uname = m.from_user.username
 	try:
-		c.execute(f"SELECT Alias,Battletag from Usuarios WHERE idUsuario={uid}")
+		c.execute(f"SELECT ALIAS,Battletag from Usuarios WHERE idUsuario={uid}")
 		
 		for i in c:
 			Alias_resultado = f"{i[0]} "
 			btag_resultado = i[1]
 			
-		bot.send_message(cid, f'*{Alias_resultado}*: {btag_resultado}', parse_mode = "Markdown")
+		bot.send_message(cid, f'*{Alias_resultado}*: `{btag_resultado}`', parse_mode = "Markdown")
 		con.commit()
 	except:
 		bot.send_message(cid, "Your Battletag is not in the DB.", parse_mode = "Markdown")
