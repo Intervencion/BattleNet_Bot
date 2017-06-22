@@ -22,7 +22,7 @@ con = sqlite3.connect('bnet.db',check_same_thread = False)
 c = con.cursor()
 pkmn = ""
 
-TOKEN = '348949500:AAEy8IR30vA6_ECsv-0J9uzMYUmQDFTmgXw' 
+TOKEN = '' 
 
 
 usuarios = [line.rstrip('\n') for line in open('users.txt')] 
