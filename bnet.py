@@ -148,7 +148,7 @@ def command_id(m):
 	arrayl = []
 	try:
 		print("entro en el try")
-		c.execute(f"SELECT idUsuario,Alias,Battletag FROM Usuarios INNER JOIN UsuGrupo ON Usuarios.idUsuario = UsuGrupo.idUsuarioFK WHERE UsuGrupo.idGrupoFK ='{cid}' ORDER BY Alias ASC")
+		c.execute(f"SELECT idUsuario,ALIAS,Battletag FROM Usuarios INNER JOIN UsuGrupo ON Usuarios.idUsuario = UsuGrupo.idUsuarioFK WHERE UsuGrupo.idGrupoFK ='{cid}' ORDER BY Alias ASC")
 		print("hago el for?")
 		for i in c:
 			print("1")
@@ -210,7 +210,7 @@ def command_addbtag(m):
 						nocapital = uname.capitalize()
 						EU = existeUser(uid)
 						if(EU == 0):
-							c.execute(f"INSERT INTO Usuarios (idUsuario,Alias,Battletag) VALUES ('{uid}','@{nocapital}','{btag}')")
+							c.execute(f"INSERT INTO Usuarios (idUsuario,ALIAS,Battletag) VALUES ('{uid}','@{nocapital}','{btag}')")
 						print("ESTOY DEBAJO DEL IF de ENTRE USUARIO = 0")
 						c.execute(f"INSERT INTO UsuGrupo(idUsuarioFK,idGrupoFK) VALUES ('{uid}','{cid}')")
 						bot.send_message(cid, f"*{uname}* has been added to the DB with Battletag *{btag}*.", parse_mode="Markdown")
@@ -224,7 +224,7 @@ def command_addbtag(m):
 					try:
 						EU = existeUser(uid)
 						if(EU == 0):
-							c.execute(f"INSERT INTO Usuarios (idUsuario,Alias,Battletag) VALUES ('{uid}', '@{nocapital}','{btag}')")
+							c.execute(f"INSERT INTO Usuarios (idUsuario,ALIAS,Battletag) VALUES ('{uid}', '@{nocapital}','{btag}')")
 						print("ESTOY DEBAJO DEL IF de ENTRE USUARIO = 0 Y AHORA VOY A COMPROBAR EUG")
 						EUG = existeUserGru(uid,cid)
 						print("Sabemos que EUG vale " + str(EUG))
