@@ -76,11 +76,12 @@ bot.set_update_listener(listener)
 @bot.message_handler(commands=['start'])
 def command_start(m):
 	cid = m.chat.id
-	comandos = "Avaible commands:\n"
-	comandos += "/add - The format of the command is `/add Battletag` where `Battletag` is your Battletag (or Blizzard ID).\n"
-	comandos += "/edit - The format of the command is `/edit Battletag` where `Battletag` is your Battletag (or Blizzard ID).\n"
-	comandos += "/list - List of the Battletags.\n"
-	comandos += "/mybt - You don't remember your Battletag? NP BRUH!"
+	comandos = "Avaible commands on @BattleNet\_Bot:\n"
+	comandos += "`/add` - The format of the command is `/add Battletag` where `Battletag` is your Battletag (or Blizzard ID).\n"
+	comandos += "`/edit` - The format of the command is `/edit Battletag` where `Battletag` is your Battletag (or Blizzard ID).\n"
+	comandos += "`/list` - List of the Battletags.\n"
+	comandos += "`/mybt` - You don't remember your Battletag? NP BRUH! I got ya!\n"
+	comandos += "`/del` - The format of the command is `/del My Battletag`."
 	bot.send_message(cid, comandos, parse_mode="Markdown")
 	
 	
@@ -273,6 +274,50 @@ def command_editbtag(m):
 			bot.send_message(cid, "ElseError: The format of the command is `/add Battletag` where `Battletag` is your Battletag (or Blizzard ID).", parse_mode="Markdown")
 	except:
 	  bot.send_message(cid, "ExceptError: The format of the command is `/add Battletag` where `Battletag` is your Battletag (or Blizzard ID).", parse_mode="Markdown")
+
+@bot.message_handler(commands=['del']) 
+def command_deletebtag(m):
+	cid = m.chat.id
+	uid = m.from_user.id
+	ufm = m.from_user.first_name
+	ulm = m.from_user.last_name
+	if (m.from_user.username is None):
+		if (ulm is None):
+			uname = ufm
+		else:
+			uname = f'{ufm} {ulm}'
+	else:
+		uname = m.from_user.username
+	try:
+		btag = m.text.split(' ', 1)[1].upper()
+		print(btag)
+		if (str(btag).startswith("MY BATTLETAG")):
+			reply = "Your Battletag is not in the DB."
+			try:
+				print("1")
+				c.execute(f"SELECT Battletag FROM Usuarios WHERE idUsuario ='{uid}'")
+				print("2")
+				for i in c:
+					print("3")
+					if i[0] is None:
+						print("4")
+						reply = "Your Battletag is not in the DB."
+					else:
+						print("5")
+						btag = i[0]
+						c.execute(f"DELETE FROM Usuarios WHERE Battletag = '{btag}'")
+						print("11")
+						c.execute(f"DELETE FROM UsuGrupo WHERE idUsuarioFK ='{uid}'")
+						print("12")
+						reply = "Your Battletag have been deleted from the BD."
+				bot.send_message(cid, reply, parse_mode = "Markdown")
+				con.commit()
+			except sqlite3.Error:
+			  bot.send_message(cid, "ExceptError: The format of the command is `/del My Battletag`.", parse_mode="Markdown")
+		else:
+			bot.send_message(cid, "ElseError: The format of the command is `/del My Battletag`.", parse_mode="Markdown")
+	except:
+		bot.send_message(cid, "ExceptError: The format of the command is `/del My Battletag`.", parse_mode="Markdown")
 
 
 @bot.message_handler(commands=['mybt']) 
