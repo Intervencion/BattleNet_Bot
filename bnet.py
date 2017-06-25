@@ -2,7 +2,7 @@
 import re
 import telebot
 from telebot import types
-import time 
+import time
 import json
 import urllib
 import random
@@ -22,13 +22,13 @@ con = sqlite3.connect('bnet.db',check_same_thread = False)
 c = con.cursor()
 pkmn = ""
 
-TOKEN = '' 
+TOKEN = ''
 
 
-usuarios = [line.rstrip('\n') for line in open('users.txt')] 
+usuarios = [line.rstrip('\n') for line in open('users.txt')]
 admins = [1896312]
 
-bot = telebot.TeleBot(TOKEN) 
+bot = telebot.TeleBot(TOKEN)
 hora = time.strftime("%Y-%m-%d %H:%M:%S")
 
 try:
@@ -43,15 +43,12 @@ def listener(messages):
 		uname = m.from_user.username
 		mct = m.chat.title
 		ufm = m.from_user.first_name
-		ulm = m.from_user.last_name
-			
 		if m.text:
 			mensaje = f"{{autogreen}}User:{{/green}} {ufm}\n"
 			if cid < 0:
 				mensaje += f"{{autoyellow}}Chat:{{/yellow}} {mct}\n"
 				mensaje += f"{{autored}}Hora:{{/red}} {hora}\n"
 				mensaje += f"{{autocyan}}UserID:{{/cyan}} [{uid}]"
-			if cid < 0:
 				mensaje += f"{{autoblue}} ChatID:{{/blue}} [{cid}]"
 				mensaje += "\n"
 				mensaje += f"{{automagenta}}Mensaje:{{/magenta}} {m.text}\n"
@@ -61,14 +58,11 @@ def listener(messages):
 				mensaje += f"{{autocyan}}UserID:{{/cyan}} [{uid}] "
 				mensaje += f"{{automagenta}}Mensaje:{{/magenta}} {m.text}\n"
 				mensaje += "{autoblack}-------------------------------{/black}\n"
-				
 			if m.text.startswith("/"):
-				f = open('log.txt', 'a')
-				f.write(mensaje)
-				f.close()
-				patata = open('id.txt', 'a')
-				patata.write(f'@{uname} [{uid}]\n')
-				patata.close()
+				with open('log.txt', 'a') as f:
+					f.write(message)
+				with open('id.txt', 'a') as f:
+					f.write(f'@{uname} [{uid}]\n')
 				print (Color(str(mensaje)))
 
 bot.set_update_listener(listener)
@@ -83,8 +77,8 @@ def command_start(m):
 	comandos += "`/mybt` - You don't remember your Battletag? NP BRUH! I got ya!\n"
 	comandos += "`/del` - The format of the command is `/del My Battletag`."
 	bot.send_message(cid, comandos, parse_mode="Markdown")
-	
-	
+
+
 @bot.message_handler(commands=['eg'])
 def command_eg(m):
 	cid = m.chat.id
@@ -103,12 +97,12 @@ def existeGrupo(cid):
 			print("Vamos a ver si el select de grupo ha devuelto algún elemento")
 			print(f'El resultado del select es: {i[0]}')
 			EG =i[0]
-	
+
 	except Exception as e:
 		print(e)
 		print("Estamos aquí porque el select nos ha devuelto un elemento vacío")
 		EG = 0
-	
+
 	return EG
 
 def existeUser(uid):
@@ -118,12 +112,12 @@ def existeUser(uid):
 			print("Vamos a ver si el select de Usuarios ha devuelto algún elemento")
 			print(f"El resultado del select es: {i[0]}")
 			EU =i[0]
-	
+
 	except Exception as e:
 		print(e)
 		print("Estamos aquí porque el select nos ha devuelto un elemento vacío")
 		EU = 0
-	
+
 	return EU
 
 def existeUserGru(uid,cid):
@@ -133,7 +127,7 @@ def existeUserGru(uid,cid):
 			print("Vamos a ver si el select de UsuGrupo ha devuelto algún elemento")
 			print(f"El resultado del select es: {i[0]}")
 			EUG =i[0]
-	
+
 	except Exception as e:
 		print(e)
 		print("Estamos aquí porque el select nos ha devuelto un elemento vacío")
@@ -143,7 +137,7 @@ def existeUserGru(uid,cid):
 
 @bot.message_handler(commands=['list'])
 def command_id(m):
-	cid = m.chat.id 
+	cid = m.chat.id
 	uname = m.from_user.username
 	uid = m.from_user.id
 	arrayl = []
@@ -172,7 +166,7 @@ def command_id(m):
 			print(str(f))
 			bot.send_message(cid, f'{f}', parse_mode = "Markdown")
 			con.commit()
-	
+
 	except:
 		bot.send_message(cid, "An error ocurred. Report to @Intervencion.")
 
@@ -248,7 +242,7 @@ def command_addbtag(m):
 			bot.send_message(cid, "ExceptError: The format of the command is `/add Battletag` where `Battletag` is your Battletag (or Blizzard ID).", parse_mode="Markdown")
 
 
-@bot.message_handler(commands=['edit']) 
+@bot.message_handler(commands=['edit'])
 def command_editbtag(m):
 	cid = m.chat.id
 	uid = m.from_user.id
@@ -266,16 +260,16 @@ def command_editbtag(m):
 			  c.execute(f"UPDATE Usuarios SET 'Battletag' = '{btag}','Alias'='@{uname}' WHERE idUsuario = {uid}")
 			  bot.send_message(cid, f"*{uname}* now have Battletag *{btag}*.", parse_mode = "Markdown")
 			  con.commit()
-	
+
 			except sqlite3.Error:
 			  bot.send_message(cid, "ExceptError: The format of the command is `/add Battletag` where `Battletag` is your Battletag (or Blizzard ID).", parse_mode="Markdown")
 		else:
-			
+
 			bot.send_message(cid, "ElseError: The format of the command is `/add Battletag` where `Battletag` is your Battletag (or Blizzard ID).", parse_mode="Markdown")
 	except:
 	  bot.send_message(cid, "ExceptError: The format of the command is `/add Battletag` where `Battletag` is your Battletag (or Blizzard ID).", parse_mode="Markdown")
 
-@bot.message_handler(commands=['del']) 
+@bot.message_handler(commands=['del'])
 def command_deletebtag(m):
 	cid = m.chat.id
 	uid = m.from_user.id
@@ -320,7 +314,7 @@ def command_deletebtag(m):
 		bot.send_message(cid, "ExceptError: The format of the command is `/del My Battletag`.", parse_mode="Markdown")
 
 
-@bot.message_handler(commands=['mybt']) 
+@bot.message_handler(commands=['mybt'])
 def command_mibtag(m):
 	cid = m.chat.id
 	uid = m.from_user.id
@@ -332,11 +326,11 @@ def command_mibtag(m):
 		uname = m.from_user.username
 	try:
 		c.execute(f"SELECT ALIAS,Battletag from Usuarios WHERE idUsuario={uid}")
-		
+
 		for i in c:
 			Alias_resultado = f"{i[0]} "
 			btag_resultado = i[1]
-				
+
 		if (btag_resultado == None):
 			bot.send_message(cid, f'Your Battletag is not in the DB.', parse_mode = "Markdown")
 			con.commit()
@@ -352,13 +346,7 @@ from config import *
 def command_exec(m):
     cid = m.chat.id
     uid = m.from_user.id
-    #try:
-        #send_udp('exec')
-    #except Exception as e:
-    #    bot.send_message(1896312, send_exception(e), parse_mode="Markdown")
-    if not is_recent(m):
-        return None
-    if m.from_user.id in admins:
+    if uid in admins:
         if len(m.text.split()) == 1:
             bot.send_message(
                 cid,
@@ -379,7 +367,7 @@ def command_exec(m):
                 bot.send_message(cid, str(cout.getvalue()))
         sys.stdout = sys.__stdout__
         sys.stderr = sys.__stderr__
-        
+
 @bot.message_handler(commands=['restart'])
 def command_restart(m):
 	if m.from_user.id in admins:
@@ -389,10 +377,6 @@ def command_restart(m):
 			bot.send_message(cid, "Mal código tete")
 	else:
 		bot.send_message(cid, "Comando reservado a SU.")
-
-
-
-
 
 
 bot.skip_pending = True
